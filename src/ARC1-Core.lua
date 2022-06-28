@@ -305,10 +305,11 @@ end
 function transfer(to, amount, ...)
   _typecheck(to, 'address')
   amount = _check_bignum(amount)
+  local from = system.getSender()
 
-  contract.event("transfer", system.getSender(), to, bignum.tostring(amount))
+  contract.event("transfer", from, to, bignum.tostring(amount))
 
-  return _transfer(system.getSender(), to, amount, ...)
+  return _transfer(from, to, amount, ...)
 end
 
 
