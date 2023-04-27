@@ -4,14 +4,17 @@
 
 The ARC1 standard contains the following modules:
 
-* [Core](#arc1--core)
-* [All Approval](#arc1--all-approval)
-* [Limited Approval](#arc1--limited-approval)
-* [Mintable](#arc1--mintable)
-* [Burnable](#arc1--burnable)
-* [Pausable](#arc1--pausable)
-* [Blacklist](#arc1--blacklist)
+* [Core](#-arc1--core)
+* [All Approval](#-arc1--all-approval)
+* [Limited Approval](#-arc1--limited-approval)
+* [Mintable](#-arc1--mintable)
+* [Burnable](#-arc1--burnable)
+* [Pausable](#-arc1--pausable)
+* [Blacklist](#-arc1--blacklist)
 
+The `core` module should be present on all fungible token contracts.
+
+The other modules are optional. You can add them to your contract if you need the functionality they provide.
 
 ### + ARC1 : Core
 
