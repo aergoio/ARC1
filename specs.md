@@ -1,19 +1,9 @@
-# Aergo Standard Token Contract, ARC1-Extensions
-
-This defines interface and behaviors for aergo token contract.
-
-## Abstract
-
-ARC1-Extensions is an extension of the ARC1Token (https://github.com/aergoio/ARC1Token).
-
-ARC1-Extensions adds the functions missing from ERC20 of the ARC1Token, such as stop transfer (`Pausable`), limited delegation (`Limited approval`), and minting tokens (`Mintable`).
-
-ARC1-Extensions additionally includes functions for managing bad users (`Blasklist`). Accounts that have been blacklisted can't transfer and burn tokens.
-
+# Aergo Standard Token Contract, ARC1
 
 ## Specification
 
 ### + ARC1 : Core
+
 ``` lua
 -- Type check
 -- @type internal
