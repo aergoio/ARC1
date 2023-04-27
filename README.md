@@ -1,4 +1,4 @@
-# Aergo Standard Token Contract (ARC1)
+# Aergo Standard for Token Contracts (ARC1)
 
 ARC1 is a technical standard for smart contracts on the Aergo blockchain, designed to implement fungible tokens with improved functionality and security. It encompasses the best features of popular token standards like ERC-20 and extends them for enhanced usability and safety.
 
@@ -17,8 +17,8 @@ By allowing users to delegate authority to a trusted contract through the `setAp
 
 The ARC1 standard includes several extensions that further enhance its functionality:
 
-### 1. Pausable
-This feature allows for the suspension of token transfers, providing greater control and security in case of emergencies or unexpected issues.
+### 1. All Approval
+The All Approval extension allows users to delegate authority to other accounts to spend tokens on their behalf.
 
 ### 2. Limited Approval
 Limited Approval functionality restricts the delegation of authority, preventing excessive access to user tokens.
@@ -26,10 +26,23 @@ Limited Approval functionality restricts the delegation of authority, preventing
 ### 3. Mintable
 This extension allows for the creation of new tokens, enabling dynamic token supply management.
 
-### 4. Blacklist
+### 4. Burnable
+The Burnable extension allows users to destroy tokens, reducing the total token supply.
+
+### 5. Pausable
+This feature allows for the suspension of token transfers, providing greater control and security in case of emergencies or unexpected issues.
+
+### 6. Blacklist
 The Blacklist feature enables administrators to manage accounts flagged as malicious or non-compliant. Blacklisted accounts are restricted from transferring or burning tokens.
 
 
 ## Specification
 
 Please check the complete specification [here](specs.md).
+
+
+## How to Create a Token
+
+The preferred way to deploy an ARC1 token contract is to use the [Aergo Token Factory](factory).
+
+The factory is a smart contract that allows users to create new ARC1 token contracts with a single transaction.

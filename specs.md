@@ -1,6 +1,17 @@
-# Aergo Standard Token Contract, ARC1
+# Aergo Standard for Token Contracts (ARC1)
 
 ## Specification
+
+The ARC1 standard contains the following modules:
+
+* [Core](#arc1--core)
+* [All Approval](#arc1--all-approval)
+* [Limited Approval](#arc1--limited-approval)
+* [Mintable](#arc1--mintable)
+* [Burnable](#arc1--burnable)
+* [Pausable](#arc1--pausable)
+* [Blacklist](#arc1--blacklist)
+
 
 ### + ARC1 : Core
 
@@ -200,7 +211,7 @@ function pause()
 function unpause()
 ```
 
-### + ARC1 : All approval
+### + ARC1 : All Approval
 ``` lua
 -- Indicate the allowance from an account to another
 -- @type    query
@@ -235,7 +246,7 @@ function transferFrom(from, to, amount, ...)
 function burnFrom(from, amount)
 ```
 
-### + ARC1 : Limited approval
+### + ARC1 : Limited Approval
 
 ``` lua
 -- Approve an account to spend the specified amount of Tx sender's tokens
