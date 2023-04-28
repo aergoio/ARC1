@@ -42,8 +42,10 @@ local function _typecheck(x, t)
     local invalidChar = string.match(x, '[^123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]')
     assert(invalidChar == nil, string.format("ARC1: invalid address format: %s contains invalid char %s", x, invalidChar or 'nil'))
     -- check address checksum
-    local success = pcall(system.isContract, x)
-    assert(success, "ARC1: invalid address: " .. x)
+    if x ~= address0 then
+      local success = pcall(system.isContract, x)
+      assert(success, "ARC1: invalid address: " .. x)
+    end
   elseif (x and t == 'ubig') then   -- a positive big integer
     -- check unsigned bignum
     assert(bignum.isbignum(x), string.format("ARC1: invalid type: %s != %s", type(x), t))
