@@ -95,12 +95,16 @@ end
 
 -- initialize the token contract
 -- this function should be called by the constructor
+-- this function can be called only once
 -- @type internal
 -- @param name (string) name of this token
 -- @param symbol (string) symbol of this token
 -- @param decimals (number) decimals of this token
 -- @param owner (optional:address) the owner of this contract
 local function _init(name, symbol, decimals, owner)
+
+  -- check if the contract is already initialized
+  assert(_name:get() == nil, "ARC1: the contract is already initialized")
 
   if owner == nil or owner == '' then
     owner = system.getCreator()
