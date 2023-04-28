@@ -5,11 +5,10 @@
 
 extensions["burnable"] = true
 
--- Burn tokens (from TX sender)
+-- Burn tokens from the caller account
 -- @type    call
--- @param   amount  (ubig) amount of token to burn
+-- @param   amount  (ubig) amount of tokens to burn
 -- @event   burn(account, amount)
-
 function burn(amount)
   amount = _check_bignum(amount)
 
@@ -20,4 +19,5 @@ function burn(amount)
   contract.event("burn", sender, bignum.tostring(amount))
 end
 
+-- register the exported functions
 abi.register(burn)

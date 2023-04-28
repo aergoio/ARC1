@@ -5,13 +5,12 @@
 
 extensions["blacklist"] = true
 
--- Add accounts to blacklist.
+-- Add accounts to the blacklist
 -- @type    call
 -- @param   account_list    (list of address)
 -- @event   addToBlacklist(account_list)
-
 function addToBlacklist(account_list)
-  assert(system.getSender() == _contract_owner:get(), "ARC1: only owner can blacklist anothers")
+  assert(system.getSender() == _contract_owner:get(), "ARC1: only owner can blacklist accounts")
 
   for i = 1, #account_list do
     _typecheck(account_list[i], 'address')
@@ -21,12 +20,10 @@ function addToBlacklist(account_list)
   contract.event("addToBlacklist", account_list)
 end
 
-
--- removes accounts from blacklist
+-- Removes accounts from the blacklist
 -- @type    call
 -- @param   account_list    (list of address)
 -- @event   removeFromBlacklist(account_list)
-
 function removeFromBlacklist(account_list)
   assert(system.getSender() == _contract_owner:get(), "ARC1: only owner can blacklist anothers")
 
@@ -38,17 +35,14 @@ function removeFromBlacklist(account_list)
   contract.event("removeFromBlacklist", account_list)
 end
 
-
--- Retrun true when an account is on blacklist
+-- Return true when an account is on the blacklist
 -- @type    query
 -- @param   account   (address)
-
 function isOnBlacklist(account)
   _typecheck(account, 'address')
-
   return _blacklist[account] == true
 end
 
-
-abi.register(addToBlacklist,removeFromBlacklist)
+-- register the exported functions
+abi.register(addToBlacklist, removeFromBlacklist)
 abi.register_view(isOnBlacklist)

@@ -9,12 +9,11 @@ state.var {
   _allowance = state.map(),   -- address/address -> unsigned_bignum
 }
 
--- Approve an account to spend the specified amount of Tx sender's tokens
+-- Approve an account to spend the specified amount of caller's tokens
 -- @type    call
 -- @param   operator (address) operator's address
 -- @param   amount   (ubig)    amount of allowed tokens
--- @event   approve(Tx sender, operator, amount)
-
+-- @event   approve(caller, operator, amount)
 function approve(operator, amount)
   _typecheck(operator, 'address')
   amount = _check_bignum(amount)
@@ -28,13 +27,11 @@ function approve(operator, amount)
   contract.event("approve", owner, operator, bignum.tostring(amount))
 end
 
-
--- Increase the amount of tokens that Tx sender allowed to an account
+-- Increase the amount of tokens allowed to an operator
 -- @type    call
 -- @param   operator (address) operator's address
--- @param   amount   (ubig)    amount of increased tokens
--- @event   increaseAllowance(Tx sender, operator, amount)
-
+-- @param   amount   (ubig)    amount to increase
+-- @event   increaseAllowance(caller, operator, amount)
 function increaseAllowance(operator, amount)
   _typecheck(operator, 'address')
   amount = _check_bignum(amount)
@@ -49,13 +46,11 @@ function increaseAllowance(operator, amount)
   contract.event("increaseAllowance", owner, operator, bignum.tostring(amount))
 end
 
-
--- Decrease the amount of tokens that Tx sender allowed to an account
+-- Decrease the amount of tokens allowed to an operator
 -- @type    call
 -- @param   operator (address) operator's address
--- @param   amount   (ubig)    amount of decreased tokens
--- @event   decreaseAllowance(Tx sender, operator, amount)
-
+-- @param   amount   (ubig)    amount of allowance to decrease
+-- @event   decreaseAllowance(caller, operator, amount)
 function decreaseAllowance(operator, amount)
   _typecheck(operator, 'address')
   amount = _check_bignum(amount)
@@ -74,20 +69,17 @@ function decreaseAllowance(operator, amount)
   contract.event("decreaseAllowance", owner, operator, bignum.tostring(amount))
 end
 
-
 -- Get amount of remaining tokens that an account allowed to another
 -- @type    query
 -- @param   owner    (address) owner's address
 -- @param   operator (address) operator's address
 -- @return  (number) amount of remaining tokens
-
 function allowance(owner, operator)
   _typecheck(owner, 'address')
   _typecheck(operator, 'address')
 
   return _allowance[owner .."/".. operator] or bignum.number(0)
 end
-
 
 -- Transfer tokens from an account to another using the allowance mechanism
 -- @type    call
@@ -97,7 +89,6 @@ end
 -- @param   ...    additional data, is sent unaltered in call to 'tokensReceived' on 'to'
 -- @return  value returned from 'tokensReceived' callback, or nil
 -- @event   transfer(from, to, amount, operator)
-
 function limitedTransferFrom(from, to, amount, ...)
   _typecheck(from, 'address')
   _typecheck(to, 'address')
@@ -119,19 +110,18 @@ function limitedTransferFrom(from, to, amount, ...)
   return _transfer(from, to, amount, ...)
 end
 
-
+-- register the exported functions
 abi.register(approve, increaseAllowance, decreaseAllowance, limitedTransferFrom)
 abi.register_view(allowance)
 
+
+if extensions["burnable"] == true then
 
 -- Burn tokens from an account using the allowance mechanism
 -- @type    call
 -- @param   from    (address) sender's address
 -- @param   amount  (ubig)    amount of tokens to burn
 -- @event   burn(from, amount, operator)
-
-if extensions["burnable"] == true then
-
 function limitedBurnFrom(from, amount)
   _typecheck(from, 'address')
   amount = _check_bignum(amount)

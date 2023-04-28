@@ -10,10 +10,9 @@ state.var {
   _max_supply = state.value()  -- unsigned_bignum
 }
 
--- set Max Supply
+-- Set the Maximum Supply of tokens
 -- @type    internal
 -- @param   amount   (ubig) amount of mintable tokens
-
 local function _setMaxSupply(amount)
   _typecheck(amount, 'ubig')
   _max_supply:set(amount)
@@ -23,10 +22,8 @@ end
 -- @type    query
 -- @param   account  (address)
 -- @return  (bool) true/false
-
 function isMinter(account)
   _typecheck(account, 'address')
-
   return (account == _contract_owner:get()) or (_minter[account] == true)
 end
 
@@ -34,7 +31,6 @@ end
 -- @type    call
 -- @param   account  (address)
 -- @event   addMinter(account)
-
 function addMinter(account)
   _typecheck(account, 'address')
 
@@ -49,7 +45,6 @@ end
 -- @type    call
 -- @param   account  (address)
 -- @event   removeMinter(account)
-
 function removeMinter(account)
   _typecheck(account, 'address')
 
@@ -63,10 +58,9 @@ function removeMinter(account)
   contract.event("removeMinter", account)
 end
 
--- Renounce the Minter Role of TX sender
+-- Renounce the Minter Role
 -- @type    call
--- @event   removeMinter(TX sender)
-
+-- @event   removeMinter(account)
 function renounceMinter()
   local sender = system.getSender()
   assert(sender ~= _contract_owner:get(), "ARC1: contract owner can't renounce minter role")
@@ -77,7 +71,6 @@ function renounceMinter()
   contract.event("removeMinter", sender)
 end
 
-
 -- Mint new tokens at an account
 -- @type    call
 -- @param   account  (address) recipient's address
@@ -85,7 +78,6 @@ end
 -- @param   ...      additional data, is sent unaltered in call to 'tokensReceived' on 'to'
 -- @return  value returned from 'tokensReceived' callback, or nil
 -- @event   mint(account, amount) 
-
 function mint(account, amount, ...)
   _typecheck(account, 'address')
   amount = _check_bignum(amount)
@@ -98,13 +90,13 @@ function mint(account, amount, ...)
   return _mint(account, amount, ...)
 end
 
--- return Max Supply
+-- Return the Max Supply
 -- @type    query
 -- @return  amount   (ubig) amount of tokens to mint
-
 function maxSupply()
   return _max_supply:get() or bignum.number(0)
 end
 
+-- register the exported functions
 abi.register(mint, addMinter, removeMinter, renounceMinter)
 abi.register_view(isMinter, maxSupply)

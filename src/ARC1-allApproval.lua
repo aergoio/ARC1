@@ -14,17 +14,15 @@ state.var {
 -- @param   owner       (address) owner's address
 -- @param   operator    (address) allowed address
 -- @return  (bool) true/false
-
 function isApprovedForAll(owner, operator)
   return _operators[owner .. "/" .. operator] == true
 end
 
--- Allow an account to use all TX sender's tokens
+-- Allow an account to use all caller's tokens
 -- @type    call
 -- @param   operator  (address) operator's address
 -- @param   approved  (boolean) true/false
--- @event   setApprovalForAll(TX sender, operator, approved)
-
+-- @event   setApprovalForAll(caller, operator, approved)
 function setApprovalForAll(operator, approved)
   _typecheck(operator, 'address')
   _typecheck(approved, 'boolean')
@@ -42,7 +40,7 @@ function setApprovalForAll(operator, approved)
   contract.event("setApprovalForAll", sender, operator, approved)
 end
 
--- Transfer tokens from an account to another, Tx sender have to be approved to spend from the account
+-- Transfer tokens from an account to another, the caller must be an approved operator
 -- @type    call
 -- @param   from    (address) sender's address
 -- @param   to      (address) recipient's address
@@ -50,7 +48,6 @@ end
 -- @param   ...     additional data, is sent unaltered in call to 'tokensReceived' on 'to'
 -- @return  value returned from 'tokensReceived' callback, or nil
 -- @event   transfer(from, to, amount, operator)
-
 function transferFrom(from, to, amount, ...)
   _typecheck(from, 'address')
   _typecheck(to, 'address')
@@ -66,19 +63,18 @@ function transferFrom(from, to, amount, ...)
   return _transfer(from, to, amount, ...)
 end
 
-
+-- register the exported functions
 abi.register(setApprovalForAll, transferFrom)
 abi.register_view(isApprovedForAll)
 
 
--- Burn tokens from an account, the operator needs to be approved to spend from the account
+if extensions["burnable"] == true then
+
+-- Burn tokens from an account, the caller must be an approved operator
 -- @type    call
 -- @param   from    (address) sender's address
 -- @param   amount  (ubig)    amount of tokens to send
 -- @event   burn(from, amount, operator)
-
-if extensions["burnable"] == true then
-
 function burnFrom(from, amount)
   _typecheck(from, 'address')
   amount = _check_bignum(amount)

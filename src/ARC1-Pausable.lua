@@ -13,10 +13,8 @@ state.var {
 -- @type    query
 -- @param   account  (address)
 -- @return  (bool) true/false
-
 function isPauser(account)
   _typecheck(account, 'address')
-
   return (account == _contract_owner:get()) or (_pauser[account] == true)
 end
 
@@ -24,7 +22,6 @@ end
 -- @type    call
 -- @param   account  (address)
 -- @event   addPauser(account)
-
 function addPauser(account)
   _typecheck(account, 'address')
 
@@ -39,7 +36,6 @@ end
 -- @type    call
 -- @param   account  (address)
 -- @event   removePauser(account)
-
 function removePauser(account)
   _typecheck(account, 'address')
 
@@ -54,7 +50,6 @@ end
 -- Renounce the granted pauser role
 -- @type    call
 -- @event   removePauser(account)
-
 function renouncePauser()
   local sender = system.getSender()
   assert(sender ~= _contract_owner:get(), "ARC1: owner can't renounce pauser role")
@@ -68,15 +63,13 @@ end
 -- Indicate if the contract is paused
 -- @type    query
 -- @return  (bool) true/false
-
 function paused()
-  return (_paused:get() == true)
+  return _paused:get()
 end
 
 -- Put the contract in a paused state
 -- @type    call
 -- @event   pause(caller)
-
 function pause()
   local sender = system.getSender()
   assert(not _paused:get(), "ARC1: contract is paused")
@@ -90,7 +83,6 @@ end
 -- Return the contract to the normal state
 -- @type    call
 -- @event   unpause(caller)
-
 function unpause()
   local sender = system.getSender()
   assert(_paused:get(), "ARC1: contract is unpaused")
@@ -101,6 +93,6 @@ function unpause()
   contract.event("unpause", sender)
 end
 
-
+-- register the exported functions
 abi.register(pause, unpause, removePauser, renouncePauser, addPauser)
 abi.register_view(paused, isPauser)
