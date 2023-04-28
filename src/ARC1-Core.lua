@@ -253,9 +253,13 @@ local function _transfer(from, to, amount, ...)
   assert(not _blacklist[from], "ARC1: sender is on blacklist")
   assert(not _blacklist[to], "ARC1: recipient is on blacklist")
 
-  assert(_balances[from] and _balances[from] >= amount, "ARC1: not enough balance")
+  -- block transfers of `0` amount
+  assert(amount > bignum.number(0), "ARC1: invalid amount")
 
-  _balances[from] = _balances[from] - amount
+  local balance = _balances[from] or bignum.number(0)
+  assert(balance >= amount, "ARC1: not enough balance")
+
+  _balances[from] = balance - amount
   _balances[to] = (_balances[to] or bignum.number(0)) + amount
 
   return _callTokensReceived(from, to, amount, ...)
@@ -287,10 +291,13 @@ local function _burn(from, amount)
   assert(not _paused:get(), "ARC1: paused contract")
   assert(not _blacklist[from], "ARC1: sender is on blacklist")
 
-  assert(_balances[from] and _balances[from] >= amount, "ARC1: not enough balance")
+  assert(amount > bignum.number(0), "ARC1: invalid amount")
 
+  local balance = _balances[from] or bignum.number(0)
+  assert(balance >= amount, "ARC1: not enough balance")
+
+  _balances[from] = balance - amount
   _totalSupply:set(_totalSupply:get() - amount)
-  _balances[from] = _balances[from] - amount
 end
 
 
