@@ -72,14 +72,15 @@ function _check_bignum(x)
       local num_decimals = _decimals:get()
       -- separate the integer part and the decimal part
       local p1, p2 = string.match('0' .. x .. '0', '(%d+)%.(%d+)')
-      -- calculate the number of digits to add or remove
+      -- calculate the number of digits to add
       local to_add = num_decimals - #p2
       if to_add > 0 then
         -- add trailing zeros
         p2 = p2 .. string.rep('0', to_add)
       elseif to_add < 0 then
-        -- remove trailing digits
-        p2 = string.sub(p2, 1, num_decimals)
+        -- do not remove trailing digits
+        --p2 = string.sub(p2, 1, num_decimals)
+        assert(false, "ARC1: too many decimal digits")
       end
       -- join the integer part and the decimal part
       x = p1 .. p2
