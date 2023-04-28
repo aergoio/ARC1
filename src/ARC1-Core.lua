@@ -293,10 +293,11 @@ local function _burn(from, amount)
 
   assert(amount > bignum.number(0), "ARC1: invalid amount")
 
-  assert(_balances[from] and _balances[from] >= amount, "ARC1: not enough balance")
+  local balance = _balances[from] or bignum.number(0)
+  assert(balance >= amount, "ARC1: not enough balance")
 
+  _balances[from] = balance - amount
   _totalSupply:set(_totalSupply:get() - amount)
-  _balances[from] = _balances[from] - amount
 end
 
 
