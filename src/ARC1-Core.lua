@@ -253,6 +253,9 @@ local function _transfer(from, to, amount, ...)
   assert(not _blacklist[from], "ARC1: sender is on blacklist")
   assert(not _blacklist[to], "ARC1: recipient is on blacklist")
 
+  -- block transfers of `0` amount
+  assert(amount > bignum.number(0), "ARC1: invalid amount")
+
   assert(_balances[from] and _balances[from] >= amount, "ARC1: not enough balance")
 
   _balances[from] = _balances[from] - amount
