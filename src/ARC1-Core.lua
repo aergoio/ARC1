@@ -34,13 +34,10 @@ address0 = '1111111111111111111111111111111111111111111111111111' -- null addres
 -- @param x variable to check
 -- @param t (string) expected type
 local function _typecheck(x, t)
-  if (x and t == 'address') then -- a string containing an address
-    assert(type(x) == 'string', "ARC1: address must be string type")
+  if (x and t == 'address') then    -- a string containing an address
+    assert(type(x) == 'string', "ARC1: address must be a string")
     -- check address length
     assert(#x == 52, string.format("ARC1: invalid address length (%s): %s", #x, x))
-    -- check characters. alphanumeric except for '0, I, O, l'
-    local invalidChar = string.match(x, '[^123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]')
-    assert(invalidChar == nil, string.format("ARC1: invalid address format: %s contains invalid char %s", x, invalidChar or 'nil'))
     -- check address checksum
     if x ~= address0 then
       local success = pcall(system.isContract, x)
@@ -50,7 +47,7 @@ local function _typecheck(x, t)
     -- check unsigned bignum
     assert(bignum.isbignum(x), string.format("ARC1: invalid type: %s != %s", type(x), t))
     assert(x >= bignum.number(0), string.format("ARC1: %s must be positive number", bignum.tostring(x)))
-  elseif (x and t == 'uint') then   -- a positive integer
+  elseif (x and t == 'uint') then   -- a positive lua integer
     assert(type(x) == 'number', string.format("ARC1: invalid type: %s != number", type(x)))
     assert(math.floor(x) == x, "ARC1: the number must be an integer")
     assert(x >= 0, "ARC1: the number must be 0 or positive")
