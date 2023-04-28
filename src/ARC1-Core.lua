@@ -291,6 +291,8 @@ local function _burn(from, amount)
   assert(not _paused:get(), "ARC1: paused contract")
   assert(not _blacklist[from], "ARC1: sender is on blacklist")
 
+  assert(amount > bignum.number(0), "ARC1: invalid amount")
+
   assert(_balances[from] and _balances[from] >= amount, "ARC1: not enough balance")
 
   _totalSupply:set(_totalSupply:get() - amount)
