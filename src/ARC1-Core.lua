@@ -34,13 +34,16 @@ address0 = '1111111111111111111111111111111111111111111111111111' -- null addres
 -- @param x variable to check
 -- @param t (string) expected type
 local function _typecheck(x, t)
-  if (x and t == 'address') then -- a string of alphanumeric char. except for '0, I, O, l'
+  if (x and t == 'address') then -- a string containing an address
     assert(type(x) == 'string', "ARC1: address must be string type")
     -- check address length
-    assert(#x == 52, string.format("ARC1: invalid address length: %s (%s)", x, #x))
-    -- check character
+    assert(#x == 52, string.format("ARC1: invalid address length (%s): %s", #x, x))
+    -- check characters. alphanumeric except for '0, I, O, l'
     local invalidChar = string.match(x, '[^123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]')
     assert(invalidChar == nil, string.format("ARC1: invalid address format: %s contains invalid char %s", x, invalidChar or 'nil'))
+    -- check address checksum
+    local success = pcall(system.isContract, x)
+    assert(success, "ARC1: invalid address: " .. x)
   elseif (x and t == 'ubig') then   -- a positive big integer
     -- check unsigned bignum
     assert(bignum.isbignum(x), string.format("ARC1: invalid type: %s != %s", type(x), t))
