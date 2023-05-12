@@ -15,7 +15,7 @@ state.var {
 -- @param   amount   (ubig)    amount of allowed tokens
 -- @event   approve(caller, operator, amount)
 function approve(operator, amount)
-  _typecheck(operator, 'address')
+  operator = _check_address(operator)
   amount = _check_bignum(amount)
 
   local owner = system.getSender()
@@ -33,7 +33,7 @@ end
 -- @param   amount   (ubig)    amount to increase
 -- @event   increaseAllowance(caller, operator, amount)
 function increaseAllowance(operator, amount)
-  _typecheck(operator, 'address')
+  operator = _check_address(operator)
   amount = _check_bignum(amount)
 
   local owner = system.getSender()
@@ -52,7 +52,7 @@ end
 -- @param   amount   (ubig)    amount of allowance to decrease
 -- @event   decreaseAllowance(caller, operator, amount)
 function decreaseAllowance(operator, amount)
-  _typecheck(operator, 'address')
+  operator = _check_address(operator)
   amount = _check_bignum(amount)
 
   local owner = system.getSender()
@@ -75,8 +75,8 @@ end
 -- @param   operator (address) operator's address
 -- @return  (number) amount of remaining tokens
 function allowance(owner, operator)
-  _typecheck(owner, 'address')
-  _typecheck(operator, 'address')
+  owner = _check_address(owner)
+  operator = _check_address(operator)
 
   return _allowance[owner .."/".. operator] or bignum.number(0)
 end
@@ -90,8 +90,8 @@ end
 -- @return  value returned from 'tokensReceived' callback, or nil
 -- @event   transfer(from, to, amount, operator)
 function limitedTransferFrom(from, to, amount, ...)
-  _typecheck(from, 'address')
-  _typecheck(to, 'address')
+  from = _check_address(from)
+  to = _check_address(to)
   amount = _check_bignum(amount)
 
   local operator = system.getSender()
@@ -123,7 +123,7 @@ if extensions["burnable"] == true then
 -- @param   amount  (ubig)    amount of tokens to burn
 -- @event   burn(from, amount, operator)
 function limitedBurnFrom(from, amount)
-  _typecheck(from, 'address')
+  from = _check_address(from)
   amount = _check_bignum(amount)
 
   assert(extensions["burnable"], "ARC1: burnable extension not available")

@@ -34,16 +34,7 @@ address0 = '1111111111111111111111111111111111111111111111111111' -- null addres
 -- @param x variable to check
 -- @param t (string) expected type
 local function _typecheck(x, t)
-  if (x and t == 'address') then    -- a string containing an address
-    assert(type(x) == 'string', "ARC1: address must be a string")
-    -- check address length
-    assert(#x == 52, string.format("ARC1: invalid address length (%s): %s", #x, x))
-    -- check address checksum
-    if x ~= address0 then
-      local success = pcall(system.isContract, x)
-      assert(success, "ARC1: invalid address: " .. x)
-    end
-  elseif (x and t == 'ubig') then   -- a positive big integer
+  if (x and t == 'ubig') then   -- a positive big integer
     -- check unsigned bignum
     assert(bignum.isbignum(x), string.format("ARC1: invalid type: %s != %s", type(x), t))
     assert(x >= bignum.number(0), string.format("ARC1: %s must be positive number", bignum.tostring(x)))
@@ -55,6 +46,26 @@ local function _typecheck(x, t)
     -- check default lua types
     assert(type(x) == t, string.format("ARC1: invalid type: %s != %s", type(x), t or 'nil'))
   end
+end
+
+-- check the given address
+-- if it is an account name, resolve it to the corresponding address
+-- raise an error on invalid address or name
+-- the returned address is guaranteed to be valid, or address0
+function _check_address(x)
+  assert(type(x) == 'string', "ARC1: address must be a string")
+  -- check address length
+  if #x == 52 then
+    -- check address checksum
+    if x ~= address0 then
+      local success = pcall(system.isContract, x)
+      assert(success, "ARC1: invalid address: " .. x)
+    end
+  else
+    x = name_service.resolve(x)
+    assert(#x == 52, "ARC1: invalid address: " .. x)
+  end
+  return x
 end
 
 -- check or convert the input to a bignum
@@ -114,7 +125,7 @@ local function _init(name, symbol, decimals, owner)
   elseif owner == 'none' then
     owner = nil
   else
-    _typecheck(owner, "address")
+    owner = _check_address(owner)
   end
   _contract_owner:set(owner)
 
@@ -206,7 +217,7 @@ function balanceOf(owner)
   if owner == nil then
     owner = system.getSender()
   else
-    _typecheck(owner, 'address')
+    owner = _check_address(owner)
   end
 
   return _balances[owner] or bignum.number(0)
@@ -303,7 +314,7 @@ end
 -- @return  value returned from 'tokensReceived' callback, or nil
 -- @event   transfer(from, to, amount)
 function transfer(to, amount, ...)
-  _typecheck(to, 'address')
+  to = _check_address(to)
   amount = _check_bignum(amount)
   local from = system.getSender()
 
@@ -315,7 +326,7 @@ end
 -- Define a new contract owner
 function set_contract_owner(address)
   assert(system.getSender() == _contract_owner:get(), "ARC1: permission denied")
-  _typecheck(address, "address")
+  address = _check_address(address)
   _contract_owner:set(address)
 end
 

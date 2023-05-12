@@ -23,7 +23,7 @@ end
 -- @param   account  (address)
 -- @return  (bool) true/false
 function isMinter(account)
-  _typecheck(account, 'address')
+  account = _check_address(account)
   return (account == _contract_owner:get()) or (_minter[account] == true)
 end
 
@@ -32,7 +32,7 @@ end
 -- @param   account  (address)
 -- @event   addMinter(account)
 function addMinter(account)
-  _typecheck(account, 'address')
+  account = _check_address(account)
 
   assert(system.getSender() == _contract_owner:get(), "ARC1: only the contract owner can add a minter")
 
@@ -46,7 +46,7 @@ end
 -- @param   account  (address)
 -- @event   removeMinter(account)
 function removeMinter(account)
-  _typecheck(account, 'address')
+  account = _check_address(account)
 
   local contract_owner = _contract_owner:get()
   assert(system.getSender() == contract_owner, "ARC1: only the contract owner can remove a minter")
@@ -79,7 +79,7 @@ end
 -- @return  value returned from 'tokensReceived' callback, or nil
 -- @event   mint(account, amount) 
 function mint(account, amount, ...)
-  _typecheck(account, 'address')
+  account = _check_address(account)
   amount = _check_bignum(amount)
 
   assert(isMinter(system.getSender()), "ARC1: only minter can mint")

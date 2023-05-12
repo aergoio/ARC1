@@ -14,7 +14,7 @@ state.var {
 -- @param   account  (address)
 -- @return  (bool) true/false
 function isPauser(account)
-  _typecheck(account, 'address')
+  account = _check_address(account)
   return (account == _contract_owner:get()) or (_pauser[account] == true)
 end
 
@@ -23,7 +23,7 @@ end
 -- @param   account  (address)
 -- @event   addPauser(account)
 function addPauser(account)
-  _typecheck(account, 'address')
+  account = _check_address(account)
 
   assert(system.getSender() == _contract_owner:get(), "ARC1: only contract owner can grant pauser role")
 
@@ -37,7 +37,7 @@ end
 -- @param   account  (address)
 -- @event   removePauser(account)
 function removePauser(account)
-  _typecheck(account, 'address')
+  account = _check_address(account)
 
   assert(system.getSender() == _contract_owner:get(), "ARC1: only owner can remove pauser role")
   assert(_pauser[account] == true, "ARC1: account does not have pauser role")

@@ -24,7 +24,7 @@ end
 -- @param   approved  (boolean) true/false
 -- @event   setApprovalForAll(caller, operator, approved)
 function setApprovalForAll(operator, approved)
-  _typecheck(operator, 'address')
+  operator = _check_address(operator)
   _typecheck(approved, 'boolean')
 
   local sender = system.getSender()
@@ -49,8 +49,8 @@ end
 -- @return  value returned from 'tokensReceived' callback, or nil
 -- @event   transfer(from, to, amount, operator)
 function transferFrom(from, to, amount, ...)
-  _typecheck(from, 'address')
-  _typecheck(to, 'address')
+  from = _check_address(from)
+  to = _check_address(to)
   amount = _check_bignum(amount)
 
   local operator = system.getSender()
@@ -76,7 +76,7 @@ if extensions["burnable"] == true then
 -- @param   amount  (ubig)    amount of tokens to send
 -- @event   burn(from, amount, operator)
 function burnFrom(from, amount)
-  _typecheck(from, 'address')
+  from = _check_address(from)
   amount = _check_bignum(amount)
 
   assert(extensions["burnable"], "ARC1: burnable extension not available")
