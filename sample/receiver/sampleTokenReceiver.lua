@@ -9,21 +9,22 @@ function default()
 end
 
 -- ************************************************
--- This function is token receive hook
+-- This function is called when a token is sent to this contract
+-- But it is also called by any account, so do not trust it without making checks first
 
-function tokensReceived(operator, from, value, success, ...)
-  if success ~= true then
-    error("contract is fail")
-  end
-  -- print memo
+function tokensReceived(operator, from, amount, ...)
+
+  local token_contract = system.getSender()
+  assert(token_contract == system.getItem("tokenCtr"), "token not supported")
+
+  -- print additional arguments
   for k, v in pairs({...}) do system.print("Arg#"..k.."="..tostring(v)) end
 
   -- send same amount of aergo to token sender
-  contract.send(from, value)
-  
-  return nil
+  contract.send(from, amount)
 
 end
+
 -- ************************************************
 
 function contractTransferFrom(to, value, ...)
