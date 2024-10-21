@@ -16,4 +16,4 @@ process_file "Blacklist" "%blacklist%"
 process_file "allApproval" "%all_approval%"
 process_file "limitedApproval" "%limited_approval%"
 
-echo "$base" > output.lua
+echo "$base" > ARC1-Factory.lua

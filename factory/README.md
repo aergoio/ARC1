@@ -81,4 +81,4 @@ Run:
 ./build.sh
 ```
 
-Then deploy the generated `output.lua` to the desired blockchain network.
+Then deploy the generated `ARC1-Factory.lua` to the desired blockchain network.
