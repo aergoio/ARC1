@@ -68,7 +68,12 @@ The factory can also be called from herajs, herapy, libaergo...
 
 ## Updating the Factory
 
-If some of the contract files were modified, a new factory can be created.
+If some of the contract files were modified, you can build a new factory and deploy it.
+
+Then update the services that use it to point to the new address.
+
+
+## Deploy the Factory
 
 Run:
 
@@ -76,5 +81,4 @@ Run:
 ./build.sh
 ```
 
-Then deploy the generated `output.lua` to the network and update services
-that use it.
+Then deploy the generated `output.lua` to the desired blockchain network.
